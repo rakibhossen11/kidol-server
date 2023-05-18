@@ -43,6 +43,12 @@ async function run() {
       res.send(result);
     })
 
+    // delete a items 
+    app.delete('/toys/:id',async (req,res)=>{
+      const id = req.params.id;
+      
+    })
+
     // post a items
     app.post('/toys',async(req,res)=>{
         const newToy = req.body;
