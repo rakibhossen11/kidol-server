@@ -9,9 +9,6 @@ const port = process.env.PORT || 5000;
 app.use(cors())
 app.use(express.json())
 
-// kidol-sports-toy
-// mZzHv9kZWsCXwKjf
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.0dt9tdk.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri);
 
@@ -29,7 +26,14 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const toysCollection = client.db('kidolDB').collection('toysDB');
 
+    app.post('/toys',async(req,res)=>{
+        const newToy = req.body;
+        console.log(newToy);
+        const result = await toysCollection.insertOne(newToy);
+        res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
