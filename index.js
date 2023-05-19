@@ -27,6 +27,7 @@ async function run() {
     // await client.connect();
 
     const toysCollection = client.db('kidolDB').collection('toysDB');
+    const shopCollection = client.db('shopDB').collection('toyShop');
 
     // get items
     app.get('/toys',async(req,res)=>{
@@ -74,6 +75,29 @@ async function run() {
         console.log(newToy);
         const result = await toysCollection.insertOne(newToy);
         res.send(result);
+    })
+
+    // post myshop
+    app.post('/shopping',async(req,res)=>{
+      const shopping = req.body;
+      console.log(shopping);
+      const result = await shopCollection.insertOne(shopping);
+      res.send(result);
+    })
+
+    // get all toys
+    app.get('/shopping',async(req,res)=>{
+      const cursor = shopCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    // get all toys by id
+    app.get('/shopping/:id',async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await shopCollection.findOne(query);
+      res.send(result);
     })
 
     // Send a ping to confirm a successful connection
