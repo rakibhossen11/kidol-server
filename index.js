@@ -31,9 +31,33 @@ async function run() {
 
     // get items
     app.get('/toys',async(req,res)=>{
-        const cursor = toysCollection.find();
-        const result = await cursor.toArray();
-        res.send(result);
+      // console.log(req.query.sellerEmail);
+      let query = {};
+      if(req.query?.sellerEmail){
+        query = {sellerEmail: req.query.sellerEmail}
+      }
+      if(req.query?.category){
+        query = {category: req.query.category}
+      }
+      // const type = req.query.type === "ascending";
+      // const value = req.query.value;
+      // console.log(req.query);
+      // let sortObj = {};
+      // sortObj[value] = type ? 1 : -1;
+      // const result = await toysCollection.find(query).sort(sortObj).toArray();
+      const result = await toysCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    // get all toys
+    app.get('/shopping',async(req,res)=>{
+      const type = req.query.type === "ascending";
+      const value = req.query.value;
+      console.log(req.query);
+      let sortObj = {};
+      sortObj[value] = type ? 1 : -1;
+      const result = await shopCollection.find({}).limit(20).sort(sortObj).toArray();
+      res.send(result);
     })
 
     // get items by id
@@ -85,12 +109,6 @@ async function run() {
       res.send(result);
     })
 
-    // get all toys
-    app.get('/shopping',async(req,res)=>{
-      const cursor = shopCollection.find();
-      const result = await cursor.toArray();
-      res.send(result);
-    })
 
     // get all toys by id
     app.get('/shopping/:id',async(req,res)=>{
